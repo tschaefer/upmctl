@@ -1,4 +1,4 @@
-# Copyright (c) 2016, Tobias Schäfer
+# Copyright (c) 2016, Tobias Schaefer
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,6 @@
 confluencectl - Control Atlassian Confluence from the console.
 """
 
-__author__ = 'Tobias Schäfer'
+__author__ = 'Tobias Schaefer'
 __version__ = '0.0.1'
 __licence__ = 'BSD'
