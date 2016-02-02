@@ -27,9 +27,32 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
-confluencectl - Control Atlassian Confluence from the console.
+Core client functionality, common across all API requests (including performing
+HTTP requests).
 """
 
-__author__ = 'Tobias Schäfer'
-__version__ = '0.0.1'
-__licence__ = 'BSD'
+from requests import Session, Request
+
+
+class Client(object):
+
+    def __init__(self, base_url=None, base_auth=None):
+        self.base_url = base_url
+        self.base_auth = base_auth
+        self.request = Request('None', base_url)
+        if self.base_auth is not None:
+            user, password = self.base_auth.split(':')
+            self.request.auth = (user, password)
+        self.response = None
+
+    def get(self):
+        self.request.method = 'GET'
+        prep = self.request.prepare()
+        session = Session()
+        self.response = session.send(prep)
+
+    def post(self, data=None):
+        self.request.method = 'POST'
+        prep = self.request.prepare()
+        session = Session()
+        self.response = session.send(prep)

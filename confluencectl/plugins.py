@@ -27,9 +27,27 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
-confluencectl - Control Atlassian Confluence from the console.
+Performs request to the Universal Plugin Manager (UPM).
 """
 
-__author__ = 'Tobias Schäfer'
-__version__ = '0.0.1'
-__licence__ = 'BSD'
+
+def get_plugins(client, kind=None):
+    client.request.url = "%s%s" % (client.request.url, 'rest/plugins/1.0/')
+    client.get()
+
+    plugins = []
+    for plugin in client.response.json().get('plugins'):
+        nplugin = {
+            'name': plugin.get('name'),
+            'version': plugin.get('version'),
+            'enabled': plugin.get('enabled')
+        }
+
+        user_installed = plugin.get('userInstalled')
+        if kind == 'UserPlugins' and not user_installed:
+            continue
+        elif kind == 'SystemPlugins' and user_installed:
+            continue
+        plugins.append(nplugin)
+
+    return dict((plugin['name'], plugin) for plugin in plugins).values()

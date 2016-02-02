@@ -27,9 +27,11 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
-confluencectl - Control Atlassian Confluence from the console.
+Action lists of available API requests.
 """
 
-__author__ = 'Tobias Schäfer'
-__version__ = '0.0.1'
-__licence__ = 'BSD'
+GET_ACTIONS = {
+    'AllPlugins': 'AllPlugins',
+    'UserPlugins': 'UserPlugins',
+    'SystemPlugins': 'SystemPlugins'
+}
