@@ -45,14 +45,20 @@ class Client(object):
             self.request.auth = (user, password)
         self.response = None
 
-    def get(self):
-        self.request.method = 'GET'
-        prep = self.request.prepare()
+    def _method(self, method, data=None):
+        self.request.method = method
+        preparation = self.request.prepare()
         session = Session()
-        self.response = session.send(prep)
+        self.response = session.send(preparation)
+
+    def get(self):
+        self._method('GET')
 
     def post(self, data=None):
-        self.request.method = 'POST'
-        prep = self.request.prepare()
-        session = Session()
-        self.response = session.send(prep)
+        self._method('POST', data=data)
+
+    def put(self, data=None):
+        self._method('PUT', data=data)
+
+    def delete(self, data=None):
+        self._method('DELETE', data=data)

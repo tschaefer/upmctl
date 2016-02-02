@@ -40,7 +40,8 @@ def get_plugins(client, kind=None):
         nplugin = {
             'name': plugin.get('name'),
             'version': plugin.get('version'),
-            'enabled': plugin.get('enabled')
+            'enabled': plugin.get('enabled'),
+            'key': plugin.get('key')
         }
 
         user_installed = plugin.get('userInstalled')
