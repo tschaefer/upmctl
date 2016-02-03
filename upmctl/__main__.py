@@ -28,13 +28,12 @@
 
 import sys
 import argparse
-from actions import GET_ACTIONS
 from client import Client
-from plugins import get_plugins
+from plugins import list_plugins
 
 
 def stype(bytestring):
-    unicode_string = bytestring.decode(sys.getfilesystemencoding())
+    unicode_string = bytestring.decode(sys.listfilesystemencoding())
     return unicode_string
 
 
@@ -51,12 +50,14 @@ def parse_options():
                         help='configuration file')
     subparsers = parser.add_subparsers()
 
-    parser_get = subparsers.add_parser('get')
-    parser_get.set_defaults(get=True)
-    parser_get.add_argument('action',
-                            type=unicode,
-                            choices=GET_ACTIONS.keys(),
-                            help='action to execute')
+    parser_list = subparsers.add_parser('list')
+    parser_list.set_defaults(list=True)
+    parser_list.add_argument('--user',
+                             action='store_true',
+                             help='list user installed plugins')
+    parser_list.add_argument('--system',
+                             action='store_true',
+                             help='list system plugins')
 
     return parser.parse_args()
 
@@ -65,10 +66,15 @@ def run(args):
     client = Client(base_url=args.base_url,
                     base_auth=args.base_authentication)
 
-    if hasattr(args, 'get'):
-        if args.action.endswith('Plugins'):
-            for plugin in get_plugins(client, args.action):
-                print plugin
+    if hasattr(args, 'list'):
+        if args.user:
+            plugins = list_plugins(client, True)
+        elif args.system:
+            plugins = list_plugins(client, False)
+        else:
+            plugins = list_plugins(client, None)
+        for plugin in plugins:
+            print plugin
 
 
 def main():

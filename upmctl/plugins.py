@@ -31,7 +31,7 @@ Performs request to the Universal Plugin Manager (UPM).
 """
 
 
-def get_plugins(client, kind=None):
+def list_plugins(client, limiter=None):
     client.request.url = "%s%s" % (client.request.url, 'rest/plugins/1.0/')
     client.get()
 
@@ -45,9 +45,9 @@ def get_plugins(client, kind=None):
         }
 
         user_installed = plugin.get('userInstalled')
-        if kind == 'UserPlugins' and not user_installed:
+        if limiter == True and not user_installed:
             continue
-        elif kind == 'SystemPlugins' and user_installed:
+        elif limiter == False and user_installed:
             continue
         plugins.append(nplugin)
 
