@@ -11,7 +11,7 @@
 #   this list of conditions and the following disclaimer in the documentation
 #   and/or other materials provided with the distribution.
 #
-# * Neither the name of vagrantctl nor the names of its
+# * Neither the name of upmctl nor the names of its
 #   contributors may be used to endorse or promote products derived from
 #   this software without specific prior written permission.
 #
@@ -27,7 +27,8 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
-confluencectl - Control Atlassian Confluence from the console.
+upmctl - Control the Atlassian Confluence Universal Plugin Manager from the
+         console.
 """
 
 __author__ = 'Tobias Schaefer'

@@ -11,7 +11,7 @@
 #   this list of conditions and the following disclaimer in the documentation
 #   and/or other materials provided with the distribution.
 #
-# * Neither the name of vagrantctl nor the names of its
+# * Neither the name of upmctl nor the names of its
 #   contributors may be used to endorse or promote products derived from
 #   this software without specific prior written permission.
 #
@@ -29,17 +29,18 @@
 from setuptools import setup
 
 setup(
-    name='confluencectl',
+    name='upmctl',
     version='0.0.1',
-    packages=['confluencectl'],
+    packages=['upmctl'],
     install_requires=['requests >= 2.9.1'],
     entry_points={'console_scripts': [
-        'confluencectl=confluencectl.__main__:main']},
+        'upmctl=upmctl.__main__:main']},
     author='Tobias Schaefer',
-    author_email='confluencectl@blackoxorg',
-    url='https://github.com/tschaefer/confluencectl',
-    description="%s" %
-        "confluencectl - Control Atlassian Confluence from the console.",
+    author_email='upmctl@blackoxorg',
+    url='https://github.com/tschaefer/upmctl',
+    description="%s - %s" %
+        ("upmctl",
+         "Control the Atlassian Universal Plugin Manager from the console."),
     license='BSD',
     include_package_data=True,
     zip_safe=False

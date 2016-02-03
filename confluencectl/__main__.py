@@ -11,7 +11,7 @@
 #   this list of conditions and the following disclaimer in the documentation
 #   and/or other materials provided with the distribution.
 #
-# * Neither the name of vagrantctl nor the names of its
+# * Neither the name of upmctl nor the names of its
 #   contributors may be used to endorse or promote products derived from
 #   this software without specific prior written permission.
 #
@@ -39,7 +39,7 @@ def stype(bytestring):
 
 
 def parse_options():
-    parser = argparse.ArgumentParser(description='vagrantctl')
+    parser = argparse.ArgumentParser(description='upmctl')
     parser.add_argument('--base-url',
                         type=unicode,
                         help='Confluence URL')
