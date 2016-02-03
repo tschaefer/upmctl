@@ -31,8 +31,8 @@ Performs request to the Universal Plugin Manager (UPM).
 """
 
 
-def list_plugins(client, limiter=None):
-    client.request.url = "%s%s" % (client.request.url, 'rest/plugins/1.0/')
+def list_plugins(client, limiter='all'):
+    client.request.url = "%s%s" % (client.request.url, '/rest/plugins/1.0/')
     client.get()
 
     plugins = []
@@ -45,10 +45,37 @@ def list_plugins(client, limiter=None):
         }
 
         user_installed = plugin.get('userInstalled')
-        if limiter == True and not user_installed:
+        if limiter == 'user' and not user_installed:
             continue
-        elif limiter == False and user_installed:
+        elif limiter == 'system' and user_installed:
             continue
         plugins.append(nplugin)
 
     return dict((plugin['name'], plugin) for plugin in plugins).values()
+
+
+def show_plugin(client, key):
+    client.request.url = "%s%s%s-key/" % (client.request.url,
+                                          '/rest/plugins/1.0/',
+                                          key)
+    client.get()
+    plugin = client.response.json()
+
+    modules = []
+    for module in plugin.get('modules'):
+        nmodule = {
+            'name': module.get('name'),
+            'key': module.get('key'),
+            'enabled': module.get('enabled')
+        }
+        modules.append(nmodule)
+
+    plugin = {
+        'name': plugin.get('name'),
+        'version': plugin.get('version'),
+        'enabled': plugin.get('enabled'),
+        'key': plugin.get('key'),
+        'modules': modules
+    }
+
+    return plugin

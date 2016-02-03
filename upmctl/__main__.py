@@ -28,8 +28,9 @@
 
 import sys
 import argparse
+import pprint
 from client import Client
-from plugins import list_plugins
+from plugins import list_plugins, show_plugin
 
 
 def stype(bytestring):
@@ -50,7 +51,8 @@ def parse_options():
                         help='configuration file')
     subparsers = parser.add_subparsers()
 
-    parser_list = subparsers.add_parser('list')
+    parser_list = subparsers.add_parser('list',
+                                        help='list plugins')
     parser_list.set_defaults(list=True)
     parser_list.add_argument('--user',
                              action='store_true',
@@ -59,22 +61,32 @@ def parse_options():
                              action='store_true',
                              help='list system plugins')
 
+    parser_show = subparsers.add_parser('show',
+                                        help='show plugin details')
+    parser_show.set_defaults(show=True)
+    parser_show.add_argument('key',
+                             type=unicode,
+                             help='plugin key')
+
     return parser.parse_args()
 
 
 def run(args):
     client = Client(base_url=args.base_url,
                     base_auth=args.base_authentication)
+    pp = pprint.PrettyPrinter()
 
     if hasattr(args, 'list'):
         if args.user:
-            plugins = list_plugins(client, True)
+            plugins = list_plugins(client, limiter='user')
         elif args.system:
-            plugins = list_plugins(client, False)
+            plugins = list_plugins(client, limiter='system')
         else:
-            plugins = list_plugins(client, None)
-        for plugin in plugins:
-            print plugin
+            plugins = list_plugins(client, limiter='all')
+        pp.pprint(plugins)
+    elif hasattr(args, 'show'):
+        plugin = show_plugin(client, args.key)
+        pp.pprint(plugin)
 
 
 def main():
