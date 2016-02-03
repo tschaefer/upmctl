@@ -27,8 +27,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
-upmctl - Control the Atlassian Confluence Universal Plugin Manager from the
-         console.
+upmctl - Control the Atlassian Universal Plugin Manager from the console.
 """
 
 __author__ = 'Tobias Schaefer'
