@@ -33,23 +33,24 @@ Performs request to the Universal Plugin Manager (UPM).
 import re
 
 
-def list_plugins(client, limiter=None):
+def list_plugins(client, key=None, value=None, pattern=None):
     client.request.url = "%s%s" % (client.request.url, '/rest/plugins/1.0/')
     client.get()
 
     plugins = client.response.json().get('plugins')
     plugins = dict((plugin['name'], plugin) for plugin in plugins).values()
 
-    if limiter == 'user':
+    if value == 'regex':
+        regex = re.compile(pattern)
         plugins = [plugin for plugin in plugins
-                   if plugin.get('userInstalled')]
-    elif limiter == 'system':
-        plugins = [plugin for plugin in plugins
-                   if not plugin.get('userInstalled')]
-    elif limiter:
-        regex = re.compile(limiter)
-        plugins = [plugin for plugin in plugins
-                   if regex.match(plugin.get('key'))]
+                   if regex.match(plugin.get(key))]
+    elif value == 'boolean':
+        if pattern == 'true':
+            plugins = [plugin for plugin in plugins
+                       if plugin.get(key)]
+        elif pattern == 'false':
+            plugins = [plugin for plugin in plugins
+                       if not plugin.get(key)]
 
     return plugins
 
