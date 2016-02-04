@@ -31,6 +31,7 @@ import argparse
 import pprint
 from client import Client
 from plugins import list_plugins, show_plugin
+from configuration import read_config, get_key_config
 
 
 def stype(bytestring):
@@ -83,13 +84,21 @@ def run(args):
 
     if hasattr(args, 'list'):
         if args.user:
-            plugins = list_plugins(client, limiter='user')
+            plugins = list_plugins(client, key='userInstalled',
+                                   value='boolean', pattern='true')
         elif args.system:
-            plugins = list_plugins(client, limiter='system')
+            plugins = list_plugins(client, key='userINstalled',
+                                   value='boolean', pattern='false')
         elif args.key:
-            plugins = list_plugins(client, limiter=args.key)
+            plugins = list_plugins(client, key='key', value='regex',
+                                   pattern=args.key)
+        elif args.key_configuration_file:
+            config = read_config(args.key_configuration_file)
+            key = get_key_config(config)
+            plugins = list_plugins(client, key='key', value='regex',
+                                   pattern=key)
         else:
-            plugins = list_plugins(client, limiter=None)
+            plugins = list_plugins(client)
         pp.pprint(plugins)
     elif hasattr(args, 'show'):
         plugin = show_plugin(client, args.key)
