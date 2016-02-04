@@ -30,28 +30,28 @@
 Performs request to the Universal Plugin Manager (UPM).
 """
 
+import re
 
-def list_plugins(client, limiter='all'):
+
+def list_plugins(client, limiter=None):
     client.request.url = "%s%s" % (client.request.url, '/rest/plugins/1.0/')
     client.get()
 
-    plugins = []
-    for plugin in client.response.json().get('plugins'):
-        nplugin = {
-            'name': plugin.get('name'),
-            'version': plugin.get('version'),
-            'enabled': plugin.get('enabled'),
-            'key': plugin.get('key')
-        }
+    plugins = client.response.json().get('plugins')
+    plugins = dict((plugin['name'], plugin) for plugin in plugins).values()
 
-        user_installed = plugin.get('userInstalled')
-        if limiter == 'user' and not user_installed:
-            continue
-        elif limiter == 'system' and user_installed:
-            continue
-        plugins.append(nplugin)
+    if limiter == 'user':
+        plugins = [plugin for plugin in plugins
+                   if plugin.get('userInstalled')]
+    elif limiter == 'system':
+        plugins = [plugin for plugin in plugins
+                   if not plugin.get('userInstalled')]
+    elif limiter:
+        regex = re.compile(limiter)
+        plugins = [plugin for plugin in plugins
+                   if regex.match(plugin.get('key'))]
 
-    return dict((plugin['name'], plugin) for plugin in plugins).values()
+    return plugins
 
 
 def show_plugin(client, key):
@@ -60,22 +60,5 @@ def show_plugin(client, key):
                                           key)
     client.get()
     plugin = client.response.json()
-
-    modules = []
-    for module in plugin.get('modules'):
-        nmodule = {
-            'name': module.get('name'),
-            'key': module.get('key'),
-            'enabled': module.get('enabled')
-        }
-        modules.append(nmodule)
-
-    plugin = {
-        'name': plugin.get('name'),
-        'version': plugin.get('version'),
-        'enabled': plugin.get('enabled'),
-        'key': plugin.get('key'),
-        'modules': modules
-    }
 
     return plugin

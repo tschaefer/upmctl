@@ -60,6 +60,11 @@ def parse_options():
     parser_list.add_argument('--system',
                              action='store_true',
                              help='list system plugins')
+    parser_list.add_argument('--key',
+                             help='list plugins by regex key')
+    parser_list.add_argument('--key-configuration-file',
+                             help='list plugins by regex key in configuration \
+                                  file')
 
     parser_show = subparsers.add_parser('show',
                                         help='show plugin details')
@@ -81,8 +86,10 @@ def run(args):
             plugins = list_plugins(client, limiter='user')
         elif args.system:
             plugins = list_plugins(client, limiter='system')
+        elif args.key:
+            plugins = list_plugins(client, limiter=args.key)
         else:
-            plugins = list_plugins(client, limiter='all')
+            plugins = list_plugins(client, limiter=None)
         pp.pprint(plugins)
     elif hasattr(args, 'show'):
         plugin = show_plugin(client, args.key)
