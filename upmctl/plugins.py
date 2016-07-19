@@ -63,3 +63,12 @@ def show_plugin(client, key):
     plugin = client.response.json()
 
     return plugin
+
+
+def install_plugin(client, token, plugin):
+    client.request.url = "%s%s?token=%s" % (client.request.url,
+                                            '/rest/plugins/1.0/',
+                                            token)
+
+    with open(plugin, 'rb') as filename:
+        client.post(files={ 'plugin': filename })

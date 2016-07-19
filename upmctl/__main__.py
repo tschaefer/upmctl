@@ -30,12 +30,13 @@ import sys
 import argparse
 import pprint
 from client import Client
-from plugins import list_plugins, show_plugin
+from plugins import list_plugins, show_plugin, install_plugin
+from upm import get_upm_token
 from configuration import read_config, get_key_config
 
 
 def stype(bytestring):
-    unicode_string = bytestring.decode(sys.listfilesystemencoding())
+    unicode_string = bytestring.decode(sys.getfilesystemencoding())
     return unicode_string
 
 
@@ -74,6 +75,13 @@ def parse_options():
                              type=unicode,
                              help='plugin key')
 
+    parser_install = subparsers.add_parser('install',
+                                           help='install plugin')
+    parser_install.set_defaults(install=True)
+    parser_install.add_argument('plugin',
+                                type=stype,
+                                help='plugin file path')
+
     return parser.parse_args()
 
 
@@ -87,7 +95,7 @@ def run(args):
             plugins = list_plugins(client, key='userInstalled',
                                    value='boolean', pattern='true')
         elif args.system:
-            plugins = list_plugins(client, key='userINstalled',
+            plugins = list_plugins(client, key='userInstalled',
                                    value='boolean', pattern='false')
         elif args.key:
             plugins = list_plugins(client, key='key', value='regex',
@@ -103,7 +111,10 @@ def run(args):
     elif hasattr(args, 'show'):
         plugin = show_plugin(client, args.key)
         pp.pprint(plugin)
-
+    elif hasattr(args, 'install'):
+        token = get_upm_token(client)
+        client.request.url = args.base_url
+        install_plugin(client, token.get('upm-token'), args.plugin)
 
 def main():
     args = parse_options()
