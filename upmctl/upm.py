@@ -32,9 +32,10 @@ Performs request to the Universal Plugin Manager (UPM).
 
 
 def get_upm_token(client):
-    client.request.url = "%s%s" % (client.request.url, '/rest/plugins/1.0/')
-    client.request.headers = { 'Content-Type':
-                               'application/vnd.atl.plugins.installed+json' }
+    client.request.url = "%s%s" % (client.request.url,
+            '/rest/plugins/1.0/?os_authType=basic')
+    client.request.headers['Accept'] = \
+            'application/vnd.atl.plugins.installed+json'
     client.get()
 
     return { 'upm-token': client.response.headers.get('upm-token') }
