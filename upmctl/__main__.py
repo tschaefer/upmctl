@@ -30,7 +30,7 @@ import sys
 import argparse
 import pprint
 from client import Client
-from plugins import list_plugins, show_plugin, install_plugin
+from plugins import list_plugins, show_plugin, install_plugin, delete_plugin
 from upm import get_upm_token
 from configuration import read_config, get_key_config
 
@@ -82,6 +82,14 @@ def parse_options():
                                 type=stype,
                                 help='plugin file path')
 
+    parser_delete = subparsers.add_parser('delete',
+                                           help='delete plugin')
+    parser_delete.set_defaults(delete=True)
+    parser_delete.add_argument('key',
+                                type=unicode,
+                                help='plugin key')
+
+
     return parser.parse_args()
 
 
@@ -115,6 +123,8 @@ def run(args):
         token = get_upm_token(client)
         client.request.url = args.base_url
         install_plugin(client, token.get('upm-token'), args.plugin)
+    elif hasattr(args, 'delete'):
+        delete_plugin(client, args.key)
 
 def main():
     args = parse_options()

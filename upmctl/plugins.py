@@ -72,3 +72,10 @@ def install_plugin(client, token, plugin):
 
     with open(plugin, 'rb') as filename:
         client.post(files={ 'plugin': filename })
+
+
+def delete_plugin(client, key):
+    client.request.url = "%s%s%s-key" % (client.request.url,
+                                         '/rest/plugins/1.0/',
+                                         key)
+    client.delete()
