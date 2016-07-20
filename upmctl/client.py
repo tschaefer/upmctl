@@ -45,10 +45,12 @@ class Client(object):
             self.request.auth = (user, password)
         self.response = None
 
-    def _method(self, method, files=None):
+    def _method(self, method, data=None, files=None):
         self.request.method = method
         if files:
             self.request.files = files
+        if data:
+            self.request.data = data
         preparation = self.request.prepare()
         session = Session()
         self.response = session.send(preparation)
@@ -56,11 +58,11 @@ class Client(object):
     def get(self):
         self._method('GET')
 
-    def post(self, files=None):
-        self._method('POST', files=files)
+    def post(self, data=None, files=None):
+        self._method('POST', data=data, files=files)
 
-    def put(self, files=None):
-        self._method('PUT', files=files)
+    def put(self, data=None, files=None):
+        self._method('PUT', data=data, files=files)
 
-    def delete(self, files=None):
-        self._method('DELETE', files=files)
+    def delete(self, data=None, files=None):
+        self._method('DELETE', data=data, files=files)
