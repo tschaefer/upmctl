@@ -31,7 +31,7 @@ import argparse
 import pprint
 from client import Client
 from plugins import (list_plugins, show_plugin, install_plugin, delete_plugin,
-        deactivate_plugin)
+        activate_plugin, deactivate_plugin)
 from upm import get_upm_token
 from configuration import read_config, get_key_config
 
