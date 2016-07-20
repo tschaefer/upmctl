@@ -30,6 +30,7 @@
 Performs request to the Universal Plugin Manager (UPM).
 """
 
+import json
 import re
 
 
@@ -79,3 +80,26 @@ def delete_plugin(client, key):
                                          '/rest/plugins/1.0/',
                                          key)
     client.delete()
+
+
+def activate_plugin(client, key):
+    modify_plugin(client, key, True)
+
+
+def deactivate_plugin(client, key):
+    modify_plugin(client, key, False)
+
+
+def modify_plugin(client, key, status):
+    client.request.url = "%s%s%s-key" % (client.request.url,
+                                         '/rest/plugins/1.0/',
+                                         key)
+    client.get()
+    raw = client.response.json()
+    raw['enabled'] = status
+    data = json.dumps(raw)
+
+    client.request.headers['Content-Type'] = \
+            'application/vnd.atl.plugins.plugin+json'
+
+    client.put(data=data)
