@@ -144,7 +144,7 @@ def run(args):
         elif hasattr(args, 'install'):
             token = get_upm_token(client)
             client.request.url = args.base_url
-            install_plugin(client, token.get('upm-token'), args.plugin)
+            install_plugin(client, token, args.plugin)
         elif hasattr(args, 'delete'):
             delete_plugin(client, args.key)
         elif hasattr(args, 'activate'):

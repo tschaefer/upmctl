@@ -38,4 +38,4 @@ def get_upm_token(client):
             'application/vnd.atl.plugins.installed+json'
     client.get()
 
-    return { 'upm-token': client.response.headers.get('upm-token') }
+    return client.response.headers.get('upm-token')
