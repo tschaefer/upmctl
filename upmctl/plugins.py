@@ -45,13 +45,10 @@ def list_plugins(client, key=None, value=None, pattern=None):
         regex = re.compile(pattern)
         plugins = [plugin for plugin in plugins
                    if regex.match(plugin.get(key))]
-    elif value == 'boolean':
-        if pattern == 'true':
-            plugins = [plugin for plugin in plugins
-                       if plugin.get(key)]
-        elif pattern == 'false':
-            plugins = [plugin for plugin in plugins
-                       if not plugin.get(key)]
+    elif value == 'boolean' and pattern == 'true':
+        plugins = [plugin for plugin in plugins if plugin.get(key)]
+    elif value == 'boolean' and pattern == 'false':
+        plugins = [plugin for plugin in plugins if not plugin.get(key)]
 
     return plugins
 
@@ -70,7 +67,6 @@ def install_plugin(client, token, plugin):
     client.request.url = "%s%s?token=%s" % (client.request.url,
                                             '/rest/plugins/1.0/',
                                             token)
-
     with open(plugin, 'rb') as filename:
         client.post(files={ 'plugin': filename })
 
@@ -98,8 +94,6 @@ def modify_plugin(client, key, status):
     raw = client.response.json()
     raw['enabled'] = status
     data = json.dumps(raw)
-
     client.request.headers['Content-Type'] = \
             'application/vnd.atl.plugins.plugin+json'
-
     client.put(data=data)

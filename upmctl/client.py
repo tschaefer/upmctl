@@ -32,11 +32,13 @@ HTTP requests).
 """
 
 from requests import Session, Request
+from requests.exceptions import ConnectionError
+from exception import ClientError
 
 
 class Client(object):
 
-    def __init__(self, base_url=None, base_auth=None):
+    def __init__(self, base_url, base_auth):
         self.base_url = base_url
         self.base_auth = base_auth
         self.request = Request('None', base_url)
@@ -53,7 +55,16 @@ class Client(object):
             self.request.data = data
         preparation = self.request.prepare()
         session = Session()
-        self.response = session.send(preparation)
+        try:
+            self.response = session.send(preparation)
+        except ConnectionError as e:
+            error = "Failed to establish a connection '%s'" % (self.base_url)
+            raise ClientError(error)
+        if self.response.status_code < 200 \
+            or self.response.status_code > 299:
+                error = "[%s] %s" % (self.response.status_code,
+                                     self.response.reason)
+                raise ClientError(error)
 
     def get(self):
         self._method('GET')
