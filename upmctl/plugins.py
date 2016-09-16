@@ -50,7 +50,7 @@ def list_plugins(client, key=None, value=None, pattern=None):
     elif value == 'boolean' and pattern == 'false':
         plugins = [plugin for plugin in plugins if not plugin.get(key)]
 
-    return plugins
+    return json.dumps(plugins, indent=4, sort_keys=True)
 
 
 def show_plugin(client, key):
@@ -60,7 +60,7 @@ def show_plugin(client, key):
     client.get()
     plugin = client.response.json()
 
-    return plugin
+    return json.dumps(plugin, indent=4, sort_keys=True)
 
 
 def install_plugin(client, token, plugin):

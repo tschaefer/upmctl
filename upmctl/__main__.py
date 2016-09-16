@@ -28,7 +28,6 @@
 
 import sys
 import argparse
-import pprint
 from client import Client
 from plugins import (list_plugins, show_plugin, install_plugin, delete_plugin,
         activate_plugin, deactivate_plugin)
@@ -115,7 +114,6 @@ def parse_options():
 def run(args):
     client = Client(base_url=args.base_url,
                     base_auth=args.base_authentication)
-    pp = pprint.PrettyPrinter()
 
     try:
 
@@ -137,10 +135,10 @@ def run(args):
             else:
                 plugins = list_plugins(client)
             if plugins is not None:
-                pp.pprint(plugins)
+                print plugins
         elif hasattr(args, 'show'):
             plugin = show_plugin(client, args.key)
-            pp.pprint(plugin)
+            print plugin
         elif hasattr(args, 'install'):
             token = get_upm_token(client)
             client.request.url = args.base_url
